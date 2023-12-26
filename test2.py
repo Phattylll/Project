@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import sys
-from flask import Flask
+from flask import Flask, jsonify
 import pytesseract
 import cv2
 import numpy as np
@@ -11,8 +11,12 @@ from datetime import datetime
 from pyzbar.pyzbar import decode
 import requests
 from urllib.request import urlopen
+import json
+
 sys.stdout.reconfigure(encoding='utf-8')
+
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False  # Ensure non-ASCII characters are not escaped in JSON
 
 # Set the Tesseract path
 pytesseract.pytesseract.tesseract_cmd = r'D:\3.1\4.1\ImgPro\Lib\Tesseract\tesseract.exe'
@@ -227,13 +231,14 @@ def process_image():
 
     print("Processing finished.")
     print("Output saved in wordsave.txt")
+    print(barcode_info)
     return barcode_info
 
 # Route to trigger the image processing and return only data from barcode_info
 @app.route('/api/processImage', methods=['GET'])
 def api_process_image():
     barcode_info = process_image()
-    return '\n'.join(f"{key}: {value}" for key, value in barcode_info.items()), 200, {'Content-Type': 'text/plain; charset=utf-8'}
+    return json.dumps(barcode_info, ensure_ascii=False).encode('utf8')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
