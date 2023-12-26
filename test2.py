@@ -153,10 +153,10 @@ def save_product_info(product_info, output_file_path, barcode_info):
     if product_info:
         print(f"Saving Product Information: {product_info}")
         with open(output_file_path, 'a', encoding='utf-8') as output_file:
-            output_file.write(f"Product Information: {product_info}\n")
+            output_file.write(f"Product: {product_info}\n")
             output_file.write("----------------------\n")
         
-        barcode_info['Product Information'] = product_info
+        barcode_info['Product'] = product_info
 
 # Function to search for barcodes on the internet using Open Food Facts API
 def search_barcodes_on_internet(barcodes, output_file_path, barcode_info):
